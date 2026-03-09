@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #38bdf8;
+            --success: #4ade80;
+            --bg: #0f172a;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            /* A subtle gradient background to look more premium */
+            background: radial-gradient(circle at top right, #1e293b, #0f172a);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .dashboard {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        h2 {
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-size: 0.9rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        #timer {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+        }
+
+        .money-section {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+        }
+
+        .money-label {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            margin-bottom: 0.5rem;
+        }
+
+        #money-count {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 12px 32px;
+            background: var(--primary);
+            color: var(--bg);
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+        <h2 id="status-text">Initializing...</h2>
+        <div id="timer">00:00:00:00</div>
+
+        <div class="money-section">
+            <div class="money-label">FUNDS RAISED</div>
+            <div id="money-count">$0</div>
+        </div>
+
+        <a href="#" class="btn">VIEW DETAILS</a>
+    </div>
+
+    <script>
+        // CONFIGURATION
+        const startTimestamp = new Date("March 16, 2026 00:00:00").getTime();
+        const endTimestamp = new Date("March 20, 2026 00:00:00").getTime(); // Change this to your end date
+        const currentMoney = 2450; // UPDATE THIS NUMBER TO CHANGE TOTAL
+
+        function update() {
+            const now = new Date().getTime();
+            let target;
+            let label;
+
+            if (now < startTimestamp) {
+                label = "Event Starts In";
+                target = startTimestamp;
+            } else if (now < endTimestamp) {
+                label = "Event Ends In";
+                target = endTimestamp;
+                document.getElementById('timer').style.color = "#4ade80"; // Change color when live
+            } else {
+                document.getElementById('status-text').innerText = "Event Complete";
+                document.getElementById('timer').innerText = "FINISHED";
+                return;
+            }
+
+            const diff = target - now;
+            
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            // Formatting numbers to always have two digits (e.g., 05 instead of 5)
+            const format = (num) => num.toString().padStart(2, '0');
+
+            document.getElementById('status-text').innerText = label;
+            document.getElementById('timer').innerText = `${d}d ${format(h)}h ${format(m)}m ${format(s)}s`;
+            document.getElementById('money-count').innerText = `$${currentMoney.toLocaleString()}`;
+        }
+
+        setInterval(update, 1000);
+        update(); // Run immediately
+    </script>
+</body>
+</html>
